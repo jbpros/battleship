@@ -11,15 +11,17 @@ Feature: battleship
   * when all locations of a single ship are hit, the player is notified of a sunk by "ka-boom"
   * when all the ships of a player are sunk, the other one wins
 
-  @wip
+  @done
   Scenario: prepare positions
     When the players prepare their ships
     Then the game is ready to play
 
+  @done
   Scenario: first player decision
-    Given the game is ready to play
+    Given the game is ready
     Then the first player is chosen
 
+  @wip
   Scenario: player shoots at a location and miss
     Given it's my turn to play
     When I shoot at a location and miss
