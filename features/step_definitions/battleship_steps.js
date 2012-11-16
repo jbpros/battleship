@@ -8,8 +8,14 @@ var defineSteps = function () {
   });
 
   this.Given(/^it's my turn to play$/, function(callback) {
-    this.prepareAGame(callback);
-    this.i = this.game.getCurrentPlayer();
+    var self = this;
+    self.prepareAGame(function (err) {
+      if (err)
+        return callback(err);
+
+      self.i = self.game.getCurrentPlayer();
+      callback();
+    });
   });
 
   this.When("the players prepare their ships", function (callback) {
@@ -18,7 +24,7 @@ var defineSteps = function () {
 
   this.When(/^I shoot at a location and miss$/, function(callback) {
     var location = this.game.getEmptyLocation();
-    this.i.shootAtLocation(location);
+    this.i.shootAtLocation(location, callback);
   });
 
   this.Then(/^the game is ready to play$/, function(callback) {
@@ -34,6 +40,14 @@ var defineSteps = function () {
     else
       callback(new Error("Expected a player to be chosen"));
   });
+
+  this.Then(/^I get a "ploof"$/, function(callback) {
+    if (this.i.missed())
+      callback();
+    else
+      callback(new Error("I was expected to have missed"));
+  });
+
 };
 
 module.exports = defineSteps;
