@@ -25,9 +25,10 @@ Feature: battleship
   Scenario: player shoots at a location and miss
     Given it's my turn to play
     When I shoot at a location and miss
-    Then I get a "ploof"
+    Then my opponent announces a "ploof"
 
+  @done
   Scenario: player shoots at a location and hit
     Given it's my turn to play
     When I shoot at a location and hit a ship
-    Then I get a "boom"
+    Then my opponent announces a "boom"
