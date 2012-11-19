@@ -13,9 +13,13 @@ var ApiWorld = function ApiWorld(callback) {
 
 ApiWorld.prototype.destroy = function destroy(callback) {
   var self = this;
-  self.myBattleship.close(function () {
-    self.opponentBattleship.close(callback);
-  });
+  if (self.myBattleship) {
+    self.myBattleship.close(function () {
+      self.opponentBattleship.close(callback);
+    });
+  } else {
+    calback();
+  }
 };
 
 ApiWorld.prototype.prepareAGame = function prepareGame(callback) {
