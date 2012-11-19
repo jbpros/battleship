@@ -2,16 +2,9 @@ var async = require("async");
 var Game = require('../../app/domain/game');
 var Player = require("../../app/domain/player");
 var Grid = require("../../app/domain/grid");
+var Ship = require("../../app/domain/ship");
 
 var DESTROYER_SIZE = 2;
-
-var Ship = function Ship(name, size) {
-  var self = {
-    getName: function getName() { return name; },
-    getSize: function getSize() { return size; }
-  };
-  return self;
-};
 
 var World = function MyWorld(callback) {
   callback();
