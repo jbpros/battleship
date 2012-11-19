@@ -11,12 +11,12 @@ Feature: battleship
   * when all locations of a single ship are hit, the player is notified of a sunk by "ka-boom"
   * when all the ships of a player are sunk, the other one wins
 
-  @done
+  @done @api-done
   Scenario: prepare positions
     When the players prepare their ships
     Then the game is ready to play
 
-  @done
+  @done @api-done
   Scenario: first player decision
     Given the game is ready
     Then the first player is chosen

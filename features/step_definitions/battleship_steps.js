@@ -1,12 +1,16 @@
 var assert = require("assert");
-var World = require("../support/world").World;
 
 var defineSteps = function () {
   var MISS_SHOT_RESULT = "ploof";
   var HIT_SHOT_RESULT = "boom";
   var SUNK_SHOT_RESULT = "ka-boom";
 
-  this.World = World;
+  if (process.env.WORLD_TYPE == "api") {
+    this.World = require("../support/api_world").World;
+  } else {
+    this.World = require("../support/world").World;
+  }
+
 
   this.Given(/^the game is ready|it's my turn to play$/, function(callback) {
     this.prepareAGame(callback);
