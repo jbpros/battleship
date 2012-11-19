@@ -7,10 +7,12 @@ var defineSteps = function () {
 
   if (process.env.WORLD_TYPE == "api") {
     this.World = require("../support/api_world").World;
+    this.After(function (callback) {
+      this.destroy(callback);
+    });
   } else {
     this.World = require("../support/world").World;
   }
-
 
   this.Given(/^the game is ready|it's my turn to play$/, function(callback) {
     this.prepareAGame(callback);

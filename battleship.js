@@ -4,6 +4,7 @@ function Battleship(player) {
 
   var self = {};
   var app = App();
+  var server;
   var opponent;
 
   var isReady = false;
@@ -15,7 +16,11 @@ function Battleship(player) {
 
   self.listen = function listen(port) {
     isReady = true;
-    app.listen(port);
+    server = app.listen(port);
+  };
+
+  self.close = function close(callback) {
+    server.close(callback);
   };
 
   self.isReady = function isReady() {

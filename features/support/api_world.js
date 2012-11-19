@@ -11,7 +11,14 @@ var ApiWorld = function ApiWorld(callback) {
   callback();
 };
 
-ApiWorld.prototype.prepareAGame = function (callback) {
+ApiWorld.prototype.destroy = function destroy(callback) {
+  var self = this;
+  self.myBattleship.close(function () {
+    self.opponentBattleship.close(callback);
+  });
+};
+
+ApiWorld.prototype.prepareAGame = function prepareGame(callback) {
   var self = this;
 
   self.i            = Player("localhost", 3001);
@@ -30,14 +37,14 @@ ApiWorld.prototype.prepareAGame = function (callback) {
   //  if (err)
   //    return callback(err);
 
-  var myBattleship = new Battleship(self.i);
-  var opponentBattleship = new Battleship(self.opponent);
+  self.myBattleship = new Battleship(self.i);
+  self.opponentBattleship = new Battleship(self.opponent);
 
-  myBattleship.listen(3001);
-  opponentBattleship.listen(3002);
+  self.myBattleship.listen(3001);
+  self.opponentBattleship.listen(3002);
 
-  myBattleship.playAgainst(self.opponent);
-  self.game = myBattleship;
+  self.myBattleship.playAgainst(self.opponent);
+  self.game = self.myBattleship;
 
   callback();
 };
