@@ -11,19 +11,27 @@ var Player = function Player(grid) {
       opponent = newOpponent;
     },
 
-    shootAtLocation: function shootAtLocation(location, callback) {
-      opponent.undergoShotAtLocation(location, function (err, result) {
+    shootAtCoordinates: function shootAtCoordinates(coordinates, callback) {
+      opponent.undergoShotAtCoordinates(coordinates, function (err, result) {
         lastShotResult = result;
         callback(null);
       });
     },
 
-    undergoShotAtLocation: function undergoShotAtLocation(location, callback) {
-      grid.isLocationOccupied(location, function (err, occupied) {
+    undergoShotAtCoordinates: function undergoShotAtCoordinates(coordinates, callback) {
+      grid.areCoordinatesOccupied(coordinates, function (err, occupied) {
         if (err)
           callback(err);
-        var result = occupied ? HIT_RESULT : MISSED_SHOT_RESULT;
-        callback(null, result);
+
+        if (occupied) {
+          grid.hitAtCoordinates(coordinates, function (err) {
+            grid.isShipAtCoordinatesSunk(coordinates, function (err, sunk) {
+              callback(null, sunk ? SUNK_RESULT : HIT_RESULT);
+            });
+          });
+        } else {
+          callback(null, MISSED_SHOT_RESULT);
+        }
       });
     },
 
@@ -32,7 +40,11 @@ var Player = function Player(grid) {
     },
 
     didHit: function didHit() {
-      return lastShotResult == HIT_RESULT;
+      return lastShotResult == HIT_RESULT || lastShotResult == SUNK_RESULT;
+    },
+
+    didSink: function didSink() {
+      return lastShotResult == SUNK_RESULT;
     }
   };
   return self;

@@ -13,9 +13,9 @@ var Locations = function Locations() {
   };
 
   self.findPositionLocations = function findPositionLocations(position) {
-    var positionLocations = self.constructor();
+    var positionLocations  = Locations();
     var remainingLocations = position.size;
-    var nextCoordinates = position.startCoordinates;
+    var nextCoordinates    = position.startCoordinates;
 
     while (remainingLocations > 0) {
       var location = self.findLocationByCoordinates(nextCoordinates);
@@ -67,13 +67,23 @@ var Grid = function Grid() {
     callback(null, locations);
   };
 
-  self.isLocationOccupied = function isLocationOccupied(location, callback) {
+  self.areCoordinatesOccupied = function areCoordinatesOccupied(coordinates, callback) {
     self.getOccupiedLocations(function (err, occupiedLocations) {
       if (err)
         return callback(err);
-      var occupiedLocation = occupiedLocations.findLocationByCoordinates(location.toCoordinates());
+      var occupiedLocation = occupiedLocations.findLocationByCoordinates(coordinates);
       callback(null, Boolean(occupiedLocation));
     });
+  };
+
+  self.findPositionAtCoordinates = function findPositionAtCoordinates(coordinates, callback) {
+    for (var i = 0; i < shipPositions.length; i++) {
+      var position = shipPositions[i];
+      var location = position.locations.findLocationByCoordinates(coordinates);
+      if (location)
+        return callback(null, position);
+    }
+    callback(null, null);
   };
 
   self.positionShip = function positionShip(startCoordinates, direction, ship, callback) {
@@ -83,11 +93,39 @@ var Grid = function Grid() {
       positionLocations.forEach(function (location) {
         emptyLocations.remove(location);
       });
-      shipPositions.push({ship: ship, locations: positionLocations});
+      shipPositions.push({ship: ship, locations: positionLocations, hitLocations: Locations()});
       callback(null);
     } else {
       callback(new Error("Ship cannot be positionned there"));
     }
+  };
+
+  self.hitAtCoordinates = function hitAtCoordinates(coordinates, callback) {
+    self.findPositionAtCoordinates(coordinates, function(err, shipPosition) {
+      if (err)
+        return callback(err);
+
+      if (!shipPosition)
+        return callback(new Error("No ship to hit there"));
+
+      // check if location was hit already
+      if (!shipPosition.hitLocations.findLocationByCoordinates(coordinates)) {
+        var location = shipPosition.locations.findLocationByCoordinates(coordinates);
+        shipPosition.hitLocations.push(location);
+      }
+      callback(null);
+    });
+
+  };
+
+  self.isShipAtCoordinatesSunk = function isShipAtCoordinatesSunk(coordinates, callback) {
+    self.findPositionAtCoordinates(coordinates, function(err, shipPosition) {
+      if (err)
+        return callback(err);
+
+      var sunk = shipPosition && (shipPosition.hitLocations.length == shipPosition.locations.length);
+      callback (err, sunk);
+    });
   };
 
   return self;

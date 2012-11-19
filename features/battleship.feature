@@ -3,11 +3,11 @@ Feature: battleship
   - ship position: a set of locations
   - location: X (letter),Y (number) coordinate
 
-  * each player prepares his ship positions
-  * decide upon first player
-  * first player shoots at a location
-  * on miss, the player is notified by "ploof"
-  * on hit, the player is notified by "boom"
+  v each player prepares his ship positions
+  v decide upon first player
+  v first player shoots at a location
+  v on miss, the player is notified by "ploof"
+  v on hit, the player is notified by "boom"
   * when all locations of a single ship are hit, the player is notified of a sunk by "ka-boom"
   * when all the ships of a player are sunk, the other one wins
 
@@ -32,3 +32,9 @@ Feature: battleship
     Given it's my turn to play
     When I shoot at a location and hit a ship
     Then my opponent announces a "boom"
+
+  @done
+  Scenario: player sinks ship
+    Given I've hit every location of a ship but one
+    When I shoot at the last location of the ship
+    Then my opponent announces a "ka-boom"
