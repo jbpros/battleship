@@ -1,19 +1,16 @@
-var express = require('express');
+var App = require("./app");
 
 function Battleship(player) {
 
   var self = {};
-  var opponentNode;
+  var app = App();
+  var opponent;
 
-  var app = express();
   var isReady = false;
 
-  app.get('/', function(req, res){
-    res.send('hello world');
-  });
-
-  self.playAgainst = function playAgainst(host, port) {
-    opponentNode = {host: host, port: port};
+  self.playAgainst = function playAgainst(_opponent) {
+    opponent = _opponent;
+    player.meetOpponent(opponent);
   };
 
   self.listen = function listen(port) {

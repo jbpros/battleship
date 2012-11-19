@@ -21,7 +21,7 @@ Feature: battleship
     Given the game is ready
     Then the first player is chosen
 
-  @done
+  @done @api-wip
   Scenario: player shoots at a location and miss
     Given it's my turn to play
     When I shoot at a location and miss
